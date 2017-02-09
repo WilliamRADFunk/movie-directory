@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -35,9 +34,9 @@
 			height: 35px;
 			margin-top: 0px;
 		}
-		p
+		#get-movie
 		{
-			margin-top: 50px;
+			margin-top: 100px;
 		}
 		#nav
 		{
@@ -61,11 +60,11 @@
 	</style>
 </head>
 <body>
-    <h1>Cinema Tycoon Movie Directory</h1>
-    <hr/>
-   	<div id="nav">
+	<h1>Cinema Tycoon Movie Directory</h1>
+	<hr/>
+	<div id="nav">
 		<ul>
-			<li><form action="movie.jsp" method="get"><input type="submit" value="Get Movie"/></form></li>
+			<li><input type="submit" class="active" value="Get Movie"></li>
 			<li><form action="movies.jsp" method="get"><input type="submit" value="Get All Movies"/></form></li>
 			<li><form action="create.jsp" method="get"><input type="submit" value="Create Movie"/></form></li>
 			<li><form action="edit.jsp" method="get"><input type="submit" value="Edit Movie"/></form></li>
@@ -73,25 +72,36 @@
 			<li><input type="submit" value="Play Cinema Tycoon" onclick="window.location='http://www.williamrobertfunk.com/applications/cinema-tycoon/'"/></li>
 		</ul>
 	</div>
-	<p>This movie directory is a raw Java MVC application using RESTful API principles to display the player-created movies in Cinema Tycoon,
-	a game described below and available to play by pressing the button above.</p>
-	<p>Cinema Tycoon is an AngularJs 1 game that allows the player to take control of a run-down Movie Theater.
-	The player can:</p>
-	<ul>
-		<li> Alter ticket prices</li>
-		<li> Upgrade the parking area</li>
-		<li> Purchase more concession snack options</li>
-		<li> Invest in more video games for the arcade</li>
-		<li> Hire or Fire employees</li>
-		<li> Run promotional advertisements</li>
-		<li> Build additional movie salons</li>
-		<li> Buy more seats for each of their salons</li>
-		<li> Improve screen size, projector quality, and sound intensity in each salon</li>
-		<li> Purchase movie licenses</li>
-		<li> Make their own database-persistent movies</li>
-		<li> Race against a ticking clock</li>
-		<li> Navigate random occurring events that improve or destabilize player's position</li>
-		<li> Compete for highest wealth in the shortest time on a leaderboard</li>
-	</ul>
+	<form id="get-movie" action="movie" method="get">
+	    Enter a movie id: <input type="text" name="id" size="20">
+	    <input type="submit" value="Get Movie" />
+	    <table>${movie}</table>
+	</form>
+	<%
+		String[] id = request.getParameterValues("id");
+		String fail = request.getParameter("HasFailed");
+        if( id != null && fail == null)
+        {
+    %>
+	        <p>Id: ${id}</p>
+	        <p>Title: ${title}</p>
+	        <p>Synopsis: ${synopsis}</p>
+	        <p>Cost: ${costLicense}</p>
+	        <p>License Duration: ${licenseLength}</p>
+	        <p>Expected Popularity: ${expectedPopularity}</p>
+	        <p>Optimal Season: ${optimalSeason}</p>
+	        <p>Worst Season: ${worstSeason}</p>
+	        <p>Produced By: ${producedBy}</p>
+	        <p>Date Created: ${dateCreated}</p>
+	        <p>Date Last Modified: ${dateModified}</p>
+    <%
+        }
+        else
+        {
+    %>
+        	<p>${msg}</p>
+    <%
+        }
+    %>
 </body>
 </html>

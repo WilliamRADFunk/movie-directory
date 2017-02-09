@@ -58,12 +58,12 @@ public class MovieServlet extends HttpServlet
             request.setAttribute("producedBy", movie.getProducedBy());
             request.setAttribute("dateCreated", movie.getDateCreated());
             request.setAttribute("dateModified", movie.getDateModified());
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
+            request.getRequestDispatcher("/movie.jsp").forward(request, response);
         }
         else
         {
             request.setAttribute("msg", "No movie exists with that id.");
-            request.getRequestDispatcher("/index.jsp?HasFailed=1").forward(request, response);
+            request.getRequestDispatcher("/movie.jsp?HasFailed=1").forward(request, response);
         }
 	}
 
