@@ -10,69 +10,77 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mysql.jdbc.Connection;
+import data.entities.Movie;
+import data.repositories.MovieRepository;
 
 /**
  * Servlet implementation class MovieServlet
  */
 @WebServlet("/movie")
-public class MovieServlet extends HttpServlet {
+public class MovieServlet extends HttpServlet
+{
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MovieServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+    public MovieServlet() { super(); }
+    
+    /**
+	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
+	 */
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		
+	}
+    
+    /**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		MovieRepository movRepo = new MovieRepository();
+		Movie movie;
+		
+		int id = Integer.parseInt(request.getParameter("id"));
+        movie = movRepo.getMovie(id);
+        if(movie != null)
+        {
+            movie = movRepo.getMovie(id);
+            request.setAttribute("id", movie.getId());
+            request.setAttribute("title", movie.getTitle());
+            request.setAttribute("synopsis", movie.getSynopsis());
+            request.setAttribute("expectedPopularity", movie.getExpectedPopularity());
+            request.setAttribute("optimalSeason", movie.getOptimalSeason());
+            request.setAttribute("worstSeason", movie.getWorstSeason());
+            request.setAttribute("costLicense", movie.getCostLicense());
+            request.setAttribute("licenseLength", movie.getLicenseLength());
+            request.setAttribute("producedBy", movie.getProducedBy());
+            request.setAttribute("dateCreated", movie.getDateCreated());
+            request.setAttribute("dateModified", movie.getDateModified());
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        }
+        else
+        {
+            request.setAttribute("msg", "No movie exists with that id.");
+            request.getRequestDispatcher("/index.jsp?HasFailed=1").forward(request, response);
+        }
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String password = "williamchang";
-		String username = "williamfunk";
-		String url = "jdbc:mysql://mysql.creativecrew.org/creativecrew_cinemaempire";
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
 		
-		PrintWriter writer = response.getWriter();
-		
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-			
-			java.sql.Connection connection = DriverManager.getConnection(url, username, password);
-			
-			Statement statement = connection.createStatement();
-			
-			ResultSet myResult;
-			myResult = statement.executeQuery("SELECT * FROM Movies WHERE `Title`='" + request.getParameter("title") + "';");
-			
-			if(myResult.next())
-			{
-				String title = myResult.getString("Title");
-				String synopsis = myResult.getString("Synopsis");
-				String cost = myResult.getString("Cost License");
-				String length = myResult.getString("License Length");
+	}
 	
-			    request.setAttribute("title", title);
-			    request.setAttribute("synopsis", synopsis);
-			    request.setAttribute("cost", cost);
-			    request.setAttribute("length", length);
-			    request.getRequestDispatcher("/index.jsp").forward(request, response);
-			}
-			else
-			{
-				request.setAttribute("title", "Nope");
-				request.getRequestDispatcher("/index.jsp").forward(request, response);
-			}
-		}
-		catch (SQLException | ClassNotFoundException e)
-		{
-			String err = e.toString();
-			writer.println("<h1>Error " + err + "</h1>");
-		}
-		writer.close();
+	/**
+	 * @see HttpServlet#doPut(HttpServletRequest, HttpServletResponse)
+	 */
+	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		
 	}
 
 }
