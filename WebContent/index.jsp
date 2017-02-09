@@ -9,8 +9,8 @@
 </head>
 <body>
     <h1>Cinema Tycoon Movie Directory</h1>
-	<form action="movie" method="post">
-	    Enter a movie title: <input type="text" name="title" size="20">
+	<form action="movie" method="get">
+	    Enter a movie title: <input type="text" name="id" size="20">
 	    <input type="submit" value="Call Servlet" />
 	    <table>${movie}</table>
 	</form>

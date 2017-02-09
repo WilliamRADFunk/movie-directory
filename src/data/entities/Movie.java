@@ -18,6 +18,7 @@ public class Movie
 	public Movie(int id, String title, String synopsis, double expectedPopularity, double actualPopularity, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy, String dateCreated, String dateModified)
 	{
 		this.id = id;
+		this.title = title;
 		this.synopsis = synopsis;
 		this.expectedPopularity = expectedPopularity;
 		this.optimalSeason = optimalSeason;
