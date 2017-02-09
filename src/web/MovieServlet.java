@@ -40,31 +40,37 @@ public class MovieServlet extends HttpServlet
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		MovieRepository movRepo = new MovieRepository();
-		Movie movie;
 		
-		int id = Integer.parseInt(request.getParameter("id"));
-        movie = movRepo.getMovie(id);
-        if(movie != null)
-        {
-            movie = movRepo.getMovie(id);
-            request.setAttribute("id", movie.getId());
-            request.setAttribute("title", movie.getTitle());
-            request.setAttribute("synopsis", movie.getSynopsis());
-            request.setAttribute("expectedPopularity", movie.getExpectedPopularity());
-            request.setAttribute("optimalSeason", movie.getOptimalSeason());
-            request.setAttribute("worstSeason", movie.getWorstSeason());
-            request.setAttribute("costLicense", movie.getCostLicense());
-            request.setAttribute("licenseLength", movie.getLicenseLength());
-            request.setAttribute("producedBy", movie.getProducedBy());
-            request.setAttribute("dateCreated", movie.getDateCreated());
-            request.setAttribute("dateModified", movie.getDateModified());
-            request.getRequestDispatcher("/movie.jsp").forward(request, response);
-        }
-        else
-        {
-            request.setAttribute("msg", "No movie exists with that id.");
-            request.getRequestDispatcher("/movie.jsp?HasFailed=1").forward(request, response);
-        }
+		if(request.getParameter("id") != null && request.getParameter("id") != "")
+		{
+			int id = Integer.parseInt(request.getParameter("id"));
+			Movie movie = movRepo.getMovie(id);
+	        if(movie != null)
+	        {
+	            movie = movRepo.getMovie(id);
+	            request.setAttribute("id", movie.getId());
+	            request.setAttribute("title", movie.getTitle());
+	            request.setAttribute("synopsis", movie.getSynopsis());
+	            request.setAttribute("expectedPopularity", movie.getExpectedPopularity());
+	            request.setAttribute("optimalSeason", movie.getOptimalSeason());
+	            request.setAttribute("worstSeason", movie.getWorstSeason());
+	            request.setAttribute("costLicense", movie.getCostLicense());
+	            request.setAttribute("licenseLength", movie.getLicenseLength());
+	            request.setAttribute("producedBy", movie.getProducedBy());
+	            request.setAttribute("dateCreated", movie.getDateCreated());
+	            request.setAttribute("dateModified", movie.getDateModified());
+	            request.getRequestDispatcher("/movie.jsp").forward(request, response);
+	        }
+	        else
+	        {
+	            request.setAttribute("msg", "No movie exists with that id.");
+	            request.getRequestDispatcher("/movie.jsp?HasFailed=1").forward(request, response);
+	        }
+		}
+		else
+		{
+			request.getRequestDispatcher("/movies.jsp").forward(request, response);
+		}
 	}
 
 	/**
