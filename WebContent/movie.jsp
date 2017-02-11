@@ -75,7 +75,6 @@
 	<form id="get-movie" action="movie" method="get">
 	    Enter a movie id: <input type="text" name="id" size="20">
 	    <input type="submit" value="Get Movie" />
-	    <table>${movie}</table>
 	</form>
 	<%
 		String[] id = request.getParameterValues("id");

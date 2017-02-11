@@ -1,8 +1,6 @@
 package web;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,11 +18,6 @@ import data.repositories.MovieRepository;
 public class MovieServlet extends HttpServlet
 {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public MovieServlet() { super(); }
     
     /**
 	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
@@ -41,7 +34,7 @@ public class MovieServlet extends HttpServlet
 	{
 		MovieRepository movRepo = new MovieRepository();
 		
-		if(request.getParameter("id") != null && request.getParameter("id") != "")
+		if(request.getParameter("id") != null /*&& request.getParameter("id") != ""*/)
 		{
 			int id = Integer.parseInt(request.getParameter("id"));
 			Movie movie = movRepo.getMovie(id);
@@ -67,10 +60,10 @@ public class MovieServlet extends HttpServlet
 	            request.getRequestDispatcher("/movie.jsp?HasFailed=1").forward(request, response);
 	        }
 		}
-		else
-		{
-			request.getRequestDispatcher("/movies.jsp").forward(request, response);
-		}
+//		else
+//		{
+//			request.getRequestDispatcher("/movies.jsp").forward(request, response);
+//		}
 	}
 
 	/**

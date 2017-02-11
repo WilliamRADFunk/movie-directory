@@ -1,14 +1,11 @@
 package data.repositories;
 
-import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import data.entities.Movie;
-
-import com.mysql.jdbc.Connection;
 
 public class MovieRepository
 {
