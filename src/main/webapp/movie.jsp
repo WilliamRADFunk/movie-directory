@@ -75,9 +75,9 @@
 					<input class="hidden" type="text" name="action" size="20" value="getMovies">
 				</form>
 			</li>
-			<li><input type="submit" value="Create Movie" onclick="window.location='/movie-directory/create.jsp'"/></li>
-			<li><input type="submit" value="Edit Movie" onclick="window.location='/movie-directory/edit.jsp'"/></li>
-			<li><input type="submit" value="Delete Movie" onclick="window.location='/movie-directory/delete.jsp'"/></li>
+			<li><input type="submit" value="Create Movie" onclick="window.location='/create.jsp'"/></li>
+			<li><input type="submit" value="Edit Movie" onclick="window.location='/edit.jsp'"/></li>
+			<li><input type="submit" value="Delete Movie" onclick="window.location='/delete.jsp'"/></li>
 			<li><input type="submit" value="Play Cinema Tycoon" onclick="window.location='http://www.williamrobertfunk.com/applications/cinema-tycoon/'"/></li>
 		</ul>
 	</div>
