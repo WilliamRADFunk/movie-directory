@@ -7,6 +7,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Cinema Tycoon Movie Directory</title>
 	<style>
+		input[type="text"].hidden
+		{
+			display: none;
+		}
 		h1
 		{
 			background-color: #008d8d;
@@ -65,11 +69,16 @@
     <hr/>
    	<div id="nav">
 		<ul>
-			<li><form action="movie.jsp" method="get"><input type="submit" value="Get Movie"/></form></li>
-			<li><form action="movies.jsp" method="get"><input type="submit" value="Get All Movies"/></form></li>
-			<li><form action="create.jsp" method="get"><input type="submit" value="Create Movie"/></form></li>
-			<li><form action="edit.jsp" method="get"><input type="submit" value="Edit Movie"/></form></li>
-			<li><form action="delete.jsp" method="get"><input type="submit" value="Delete Movie"/></form></li>
+			<li><input type="submit" value="Get Movie" onclick="window.location='/movie-directory/movie.jsp'"/></li>
+			<li>
+				<form action="api/v1/movies" method="get">
+					<input type="submit" value="Get All Movies"/>
+					<input class="hidden" type="text" name="action" size="20" value="getMovies">
+				</form>
+			</li>
+			<li><input type="submit" value="Create Movie" onclick="window.location='/movie-directory/create.jsp'"/></li>
+			<li><input type="submit" value="Edit Movie" onclick="window.location='/movie-directory/edit.jsp'"/></li>
+			<li><input type="submit" value="Delete Movie" onclick="window.location='/movie-directory/delete.jsp'"/></li>
 			<li><input type="submit" value="Play Cinema Tycoon" onclick="window.location='http://www.williamrobertfunk.com/applications/cinema-tycoon/'"/></li>
 		</ul>
 	</div>
