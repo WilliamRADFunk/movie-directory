@@ -6,9 +6,21 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Cinema Tycoon Movie Directory</title>
 	<style>
+		body
+		{
+			width: 100%;
+		}
+		input[type="text"]
+		{
+			min-width: 300px;
+		}
 		input[type="text"].hidden
 		{
 			display: none;
+		}
+		input[type="number"]
+		{
+			min-width: 300px;
 		}
 		h1
 		{
@@ -38,9 +50,16 @@
 			height: 35px;
 			margin-top: 0px;
 		}
-		#get-movie
+		#create-movie
 		{
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
 			margin-top: 40px;
+		}
+		#create-movie > table > tr > td
+		{
+			margin-top: 20px;
 		}
 		#nav
 		{
@@ -68,28 +87,49 @@
 	<hr/>
 	<div id="nav">
 		<ul>
-			<li><input type="submit" class="active" value="Get Movie"></li>
+			<li><input type="submit" value="Get Movie" onclick="window.location='/movie.jsp'"/></li>
 			<li>
 				<form action="/api/v1/movies" method="get">
 					<input type="submit" value="Get All Movies"/>
 					<input class="hidden" type="text" name="action" size="20" value="getMovies">
 				</form>
 			</li>
-			<li><input type="submit" value="Create Movie" onclick="window.location='/create.jsp'"/></li>
+			<li><input type="submit" class="active" value="Create Movie"></li>
 			<li><input type="submit" value="Edit Movie" onclick="window.location='/edit.jsp'"/></li>
 			<li><input type="submit" value="Delete Movie" onclick="window.location='/delete.jsp'"/></li>
 			<li><input type="submit" value="Play Cinema Tycoon" onclick="window.location='http://www.williamrobertfunk.com/applications/cinema-tycoon/'"/></li>
 		</ul>
 	</div>
-	<form id="get-movie" action="api/v1/movies" method="get">
-	    Enter a movie id: <input type="text" name="id" size="20">
-	    <input class="hidden" type="text" name="action" size="20" value="getMovie">
-	    <input type="submit" value="Get Movie" />
+	<form id="#create-movie" action="/api/v1/movies" method="post">
+		<table>
+	    	<tr>
+	    		<td>Title: </td><td><input type="text" name="title" size="35"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Synopsis: </td><td><input type="text" name="synopsis" size="35"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Optimal Season (0-3): </td><td><input type="number" min="0" max="3" step="1" name="optimalSeason" size="35"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Worst Season (0-3): </td><td><input type="number" min="0" max="3" step="1" name="worstSeason" size="35"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Cost ($1,000 - $10,000): </td><td><input type="number" min="1000" max="10000" step="100" name="costLicense" size="35"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Duration (weeks): </td><td><input type="number" min="12" max="52" step="1" name="licenseLength" size="35"></td>
+	    	</tr>
+	    	<tr>
+	    		<td>Your Name: </td><td><input type="text" name="producedBy" size="35"></td>
+	    	</tr>
+	    </table>
+	    <input type="submit" value="Submit Movie" />
 	</form>
 	<%
 		String[] id = request.getParameterValues("id");
 		String fail = request.getParameter("HasFailed");
-        if( id != null && fail == null)
+        if(fail == null)
         {
     %>
 	        <p>Id: ${id}</p>

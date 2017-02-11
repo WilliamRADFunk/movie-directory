@@ -40,9 +40,9 @@
 			height: 35px;
 			margin-top: 0px;
 		}
-		#get-movie
+		#get-movies
 		{
-			margin-top: 100px;
+			margin-top: 40px;
 		}
 		#nav
 		{

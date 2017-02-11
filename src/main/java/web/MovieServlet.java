@@ -44,7 +44,85 @@ public class MovieServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		MovieRepository movRepo = new MovieRepository();
 		
+		String msg = "";
+		boolean success = false;
+		if(		request.getParameter("title") != null &&
+				request.getParameter("synopsis") != null &&
+				request.getParameter("optimalSeason") != null &&
+				request.getParameter("worstSeason") != null &&
+				request.getParameter("costLicense") != null &&
+				request.getParameter("licenseLength") != null &&
+				request.getParameter("producedBy") != null)
+		{
+			Movie movie = movRepo.createMovie(request.getParameter("title"), request.getParameter("synopsis"), Integer.parseInt(request.getParameter("optimalSeason")), Integer.parseInt(request.getParameter("worstSeason")), Double.parseDouble(request.getParameter("costLicense")), Integer.parseInt(request.getParameter("licenseLength")), request.getParameter("producedBy"));
+			if(movie != null) {
+//				response.getWriter().println("Test");
+//				return  ;}}
+	            request.setAttribute("id", movie.getId());
+	            request.setAttribute("title", movie.getTitle());
+	            request.setAttribute("synopsis", movie.getSynopsis());
+	            request.setAttribute("expectedPopularity", movie.getExpectedPopularity());
+	            request.setAttribute("optimalSeason", movie.getOptimalSeason());
+	            request.setAttribute("worstSeason", movie.getWorstSeason());
+	            request.setAttribute("costLicense", movie.getCostLicense());
+	            request.setAttribute("licenseLength", movie.getLicenseLength());
+	            request.setAttribute("producedBy", movie.getProducedBy());
+	            request.setAttribute("dateCreated", movie.getDateCreated());
+	            request.setAttribute("dateModified", movie.getDateModified());
+	            request.getRequestDispatcher("/create.jsp").forward(request, response);
+	            success = true;
+	        }
+			else {
+	            request.setAttribute("msg", "Failed to create your movie.");
+	            request.getRequestDispatcher("/create.jsp?HasFailed=1").forward(request, response);
+	        }
+		}
+		else if(request.getParameter("title") == null || request.getParameter("title") == "")
+		{
+			msg = "Invalid title.";
+		}
+		else if(request.getParameter("synopsis") == null || request.getParameter("synopsis") == "")
+		{
+			msg = "Invalid synopsis.";
+		}
+		else if(request.getParameter("optimalSeason") == null ||
+				Integer.parseInt(request.getParameter("optimalSeason")) < 0 ||
+				Integer.parseInt(request.getParameter("optimalSeason")) > 3)
+		{
+			msg = "Invalid Optimal Season.";
+		}
+		else if(request.getParameter("worstSeason") == null ||
+				Integer.parseInt(request.getParameter("worstSeason")) < 0 ||
+				Integer.parseInt(request.getParameter("worstSeason")) > 3)
+		{
+			msg = "Invalid Worst Season.";
+		}
+		else if(request.getParameter("costLicense") == null ||
+				Integer.parseInt(request.getParameter("costLicense")) < 1000 ||
+				Integer.parseInt(request.getParameter("costLicense")) > 10000)
+		{
+			msg = "Invalid Cost of License.";
+		}
+		else if(request.getParameter("licenseLength") == null ||
+				Integer.parseInt(request.getParameter("licenseLength")) < 12 ||
+				Integer.parseInt(request.getParameter("licenseLength")) > 52)
+		{
+			msg = "Invalid License Duration.";
+		}
+		else if(request.getParameter("producedBy") == null || request.getParameter("producedBy") == "")
+		{
+			msg = "Invalid name.";
+		}
+		else
+		{
+			msg = "Invalid input.";
+		}
+		if(!success) {
+			request.setAttribute("msg", msg);
+			request.getRequestDispatcher("/create.jsp?HasFailed=1").forward(request, response);
+		}
 	}
 	
 	/**

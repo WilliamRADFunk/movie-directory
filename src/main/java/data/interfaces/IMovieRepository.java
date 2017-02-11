@@ -8,7 +8,7 @@ public interface IMovieRepository {
 	/**
 	 * Create movie.
 	 */
-	public Movie createMovie(int id, String title, String synopsis, double expectedPopularity, double actualPopularity, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy, String dateCreated, String dateModified);
+	public Movie createMovie(String title, String synopsis, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy);
 	
 	/**
 	 * Delete movie.
@@ -18,7 +18,7 @@ public interface IMovieRepository {
 	/**
 	 * Edit movie.
 	 */
-	public Movie editMovie(int id, String title, String synopsis, double expectedPopularity, double actualPopularity, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy, String dateCreated, String dateModified);
+	public Movie editMovie(int id, String title, String synopsis, double expectedPopularity, double actualPopularity, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy, String dateModified);
 	
 	/**
 	 * Get movie.

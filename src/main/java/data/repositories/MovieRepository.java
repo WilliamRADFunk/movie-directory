@@ -19,20 +19,41 @@ public class MovieRepository implements IMovieRepository {
 		
 	}
 	
-	public Movie createMovie(int id, String title, String synopsis, double expectedPopularity, double actualPopularity, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy, String dateCreated, String dateModified) {
-		// TODO Auto-generated method stub
-		return null;
+	public Movie createMovie(String title, String synopsis, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy) {
+		try {
+			java.util.Date dt = new java.util.Date();
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String currentTime = sdf.format(dt);
+			
+			double expectedPopularity = 0.5;
+			double actualPopularity = 0.5;
+			
+			Class.forName("com.mysql.jdbc.Driver");
+			java.sql.Connection connection = DriverManager.getConnection(url, username, password);
+			Statement statement = connection.createStatement();
+			
+			int numRowsAffected = statement.executeUpdate("INSERT INTO Movies (Title, Synopsis, `Expected Popularity`, `Actual Popularity`, `Optimal Season`, `Worst Season`, `Cost License`, `License Length`, `Produced By`, `Date Created`, `Date Modified`) VALUES ('" + title + "', '" + synopsis + "', " + expectedPopularity + ", " + actualPopularity + ", " + optimalSeason + ", " + worstSeason + ", " + costLicense + ", " + licenseLength + ", '" + producedBy + "', '" + currentTime + "', '" + currentTime + "');", Statement.RETURN_GENERATED_KEYS);
+			System.out.println(numRowsAffected);
+			Movie movie;
+			if(numRowsAffected > 0) {
+				movie = new Movie(numRowsAffected, title, synopsis, expectedPopularity, actualPopularity, optimalSeason, worstSeason, costLicense, licenseLength, producedBy, currentTime, currentTime);
+				return movie;
+			}
+			else {
+				return null;
+			}
+		}
+		catch (SQLException | ClassNotFoundException e) {
+			String err = e.toString();
+			return null;
+		}
 	}
 	
 	public Movie deleteMovie(int id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Movie editMovie(int id, String title, String synopsis, double expectedPopularity, double actualPopularity,
-			int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy,
-			String dateCreated, String dateModified) {
-		// TODO Auto-generated method stub
+	public Movie editMovie(int id, String title, String synopsis, double expectedPopularity, double actualPopularity, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy, String dateModified) {
 		return null;
 	}
 
