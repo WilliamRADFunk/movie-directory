@@ -97,8 +97,51 @@ public class MovieRepository implements IMovieRepository {
 	/**
 	 * Edit movie.
 	 */
-	public Movie editMovie(int id, String title, String synopsis, double expectedPopularity, double actualPopularity, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy, String dateModified) {
-		return null;
+	public Movie editMovie(int id, String title, String synopsis, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy) {
+		try {
+			java.util.Date dt = new java.util.Date();
+			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String currentTime = sdf.format(dt);
+			
+			Class.forName("com.mysql.jdbc.Driver");
+			java.sql.Connection connection = DriverManager.getConnection(url, username, password);
+			Statement statement = connection.createStatement();
+			
+			String dateModified = currentTime;
+			int numRowsAffected = statement.executeUpdate("UPDATE Movies SET Title='" + title + "', Synopsis='" + synopsis + "', `Optimal Season`=" + optimalSeason + ", `Worst Season`=" + worstSeason + ", `Cost License`=" + costLicense + ", `License Length`=" + licenseLength + ", `Produced By`='" + producedBy + "', `Date Modified`='" + currentTime + "' WHERE `ID`='" + id + "';");
+			
+			if(numRowsAffected > 0) {
+				ResultSet myResult;
+				myResult = statement.executeQuery("SELECT * FROM Movies WHERE `ID`='" + id + "';");
+
+				if(myResult.next()) {
+					Movie movie = new Movie(	myResult.getInt("ID"),
+												myResult.getString("Title"),
+												myResult.getString("Synopsis"),
+												myResult.getDouble("Expected Popularity"),
+												myResult.getDouble("Actual Popularity"),
+												myResult.getInt("Optimal Season"),
+												myResult.getInt("Worst Season"),
+												myResult.getDouble("Cost License"),
+												myResult.getInt("License Length"),
+												myResult.getString("Produced By"),
+												myResult.getString("Date Created"),
+												myResult.getString("Date Modified")
+											);
+					return movie;
+				}
+				else {
+					return null;
+				}
+			}
+			else {
+				return null;
+			}
+		}
+		catch (SQLException | ClassNotFoundException e) {
+			String err = e.toString();
+			return null;
+		}
 	}
 
 	/**

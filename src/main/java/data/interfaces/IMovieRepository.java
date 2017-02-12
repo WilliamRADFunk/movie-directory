@@ -18,7 +18,7 @@ public interface IMovieRepository {
 	/**
 	 * Edit movie.
 	 */
-	public Movie editMovie(int id, String title, String synopsis, double expectedPopularity, double actualPopularity, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy, String dateModified);
+	public Movie editMovie(int id, String title, String synopsis, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy);
 	
 	/**
 	 * Get movie.
