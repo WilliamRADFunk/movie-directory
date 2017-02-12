@@ -21,37 +21,6 @@ public class MovieServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
     /**
-	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
-	 */
-	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		MovieRepository movRepo = new MovieRepository();
-		
-		if(request.getParameter("id") != null && request.getParameter("id") != "") {
-			int id = Integer.parseInt(request.getParameter("id"));
-			Movie movie = movRepo.deleteMovie(id);
-			
-	        if(movie != null) {
-	            request.setAttribute("id", movie.getId());
-	            request.setAttribute("title", movie.getTitle());
-	            request.setAttribute("synopsis", movie.getSynopsis());
-	            request.setAttribute("expectedPopularity", movie.getExpectedPopularity());
-	            request.setAttribute("optimalSeason", movie.getOptimalSeason());
-	            request.setAttribute("worstSeason", movie.getWorstSeason());
-	            request.setAttribute("costLicense", movie.getCostLicense());
-	            request.setAttribute("licenseLength", movie.getLicenseLength());
-	            request.setAttribute("producedBy", movie.getProducedBy());
-	            request.setAttribute("dateCreated", movie.getDateCreated());
-	            request.setAttribute("dateModified", movie.getDateModified());
-	            request.getRequestDispatcher("/delete.jsp").forward(request, response);
-	        }
-	        else {
-	            request.setAttribute("msg", "No movie exists with that id.");
-	            request.getRequestDispatcher("/delete.jsp?HasFailed=1").forward(request, response);
-	        }
-		}
-	}
-    
-    /**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -68,6 +37,19 @@ public class MovieServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String action = request.getParameter("action");
+		if(action.equals("createMovie")) {
+			createMovies(request, response);
+		}
+		else if(action.equals("deleteMovie")) {
+			deleteMovies(request, response);
+		}
+	}
+	
+	/**
+	 * Create movie.
+	 */
+	private void createMovies(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		MovieRepository movRepo = new MovieRepository();
 		
 		String msg = "";
@@ -149,10 +131,34 @@ public class MovieServlet extends HttpServlet {
 	}
 	
 	/**
-	 * @see HttpServlet#doPut(HttpServletRequest, HttpServletResponse)
+	 * Delete movie.
 	 */
-	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void deleteMovies(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		MovieRepository movRepo = new MovieRepository();
 		
+		if(request.getParameter("id") != null && request.getParameter("id") != "") {
+			int id = Integer.parseInt(request.getParameter("id"));
+			Movie movie = movRepo.deleteMovie(id);
+			
+	        if(movie != null) {
+	            request.setAttribute("id", movie.getId());
+	            request.setAttribute("title", movie.getTitle());
+	            request.setAttribute("synopsis", movie.getSynopsis());
+	            request.setAttribute("expectedPopularity", movie.getExpectedPopularity());
+	            request.setAttribute("optimalSeason", movie.getOptimalSeason());
+	            request.setAttribute("worstSeason", movie.getWorstSeason());
+	            request.setAttribute("costLicense", movie.getCostLicense());
+	            request.setAttribute("licenseLength", movie.getLicenseLength());
+	            request.setAttribute("producedBy", movie.getProducedBy());
+	            request.setAttribute("dateCreated", movie.getDateCreated());
+	            request.setAttribute("dateModified", movie.getDateModified());
+	            request.getRequestDispatcher("/delete.jsp").forward(request, response);
+	        }
+	        else {
+	            request.setAttribute("msg", "No movie exists with that id.");
+	            request.getRequestDispatcher("/delete.jsp?HasFailed=1").forward(request, response);
+	        }
+		}
 	}
 	
 	/**

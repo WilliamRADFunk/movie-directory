@@ -124,6 +124,7 @@
 	    		<td>Your Name: </td><td><input type="text" name="producedBy" size="35"></td>
 	    	</tr>
 	    </table>
+	    <input class="hidden" type="text" name="action" size="20" value="createMovie">
 	    <input type="submit" value="Submit Movie" />
 	</form>
 	<%
