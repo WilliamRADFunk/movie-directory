@@ -33,7 +33,7 @@ public class MovieRepository implements IMovieRepository {
 			Statement statement = connection.createStatement();
 			
 			int numRowsAffected = statement.executeUpdate("INSERT INTO Movies (Title, Synopsis, `Expected Popularity`, `Actual Popularity`, `Optimal Season`, `Worst Season`, `Cost License`, `License Length`, `Produced By`, `Date Created`, `Date Modified`) VALUES ('" + title + "', '" + synopsis + "', " + expectedPopularity + ", " + actualPopularity + ", " + optimalSeason + ", " + worstSeason + ", " + costLicense + ", " + licenseLength + ", '" + producedBy + "', '" + currentTime + "', '" + currentTime + "');", Statement.RETURN_GENERATED_KEYS);
-			System.out.println(numRowsAffected);
+
 			Movie movie;
 			if(numRowsAffected > 0) {
 				movie = new Movie(numRowsAffected, title, synopsis, expectedPopularity, actualPopularity, optimalSeason, worstSeason, costLicense, licenseLength, producedBy, currentTime, currentTime);
@@ -49,10 +49,54 @@ public class MovieRepository implements IMovieRepository {
 		}
 	}
 	
+	/**
+	 * Delete movie.
+	 */
 	public Movie deleteMovie(int id) {
-		return null;
+		try {			
+			Class.forName("com.mysql.jdbc.Driver");
+			java.sql.Connection connection = DriverManager.getConnection(url, username, password);
+			Statement statement = connection.createStatement();
+			
+			ResultSet myResult;
+			myResult = statement.executeQuery("SELECT * FROM Movies WHERE `ID`='" + id + "';");
+			
+			if(myResult.next()) {
+				Movie movie = new Movie(	myResult.getInt("ID"),
+											myResult.getString("Title"),
+											myResult.getString("Synopsis"),
+											myResult.getDouble("Expected Popularity"),
+											myResult.getDouble("Actual Popularity"),
+											myResult.getInt("Optimal Season"),
+											myResult.getInt("Worst Season"),
+											myResult.getDouble("Cost License"),
+											myResult.getInt("License Length"),
+											myResult.getString("Produced By"),
+											myResult.getString("Date Created"),
+											myResult.getString("Date Modified")
+										);
+				int numRowsAffected = statement.executeUpdate("DELETE FROM Movies WHERE `ID`='" + id + "';");
+
+				if(numRowsAffected > 0) {
+					return movie;
+				}
+				else {
+					return null;
+				}
+			}
+			else {
+				return null;
+			}
+		}
+		catch (SQLException | ClassNotFoundException e) {
+			String err = e.toString();
+			return null;
+		}
 	}
 
+	/**
+	 * Edit movie.
+	 */
 	public Movie editMovie(int id, String title, String synopsis, double expectedPopularity, double actualPopularity, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy, String dateModified) {
 		return null;
 	}
