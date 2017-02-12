@@ -81,7 +81,7 @@
 			<li><input type="submit" value="Play Cinema Tycoon" onclick="window.location='http://www.williamrobertfunk.com/applications/cinema-tycoon/'"/></li>
 		</ul>
 	</div>
-	<form id="delete-movie" action="api/v1/movies" method="post">
+	<form id="delete-movie" action="/api/v1/movies" method="post">
 	    Enter a movie id: <input type="text" name="id" size="20">
 	    <input class="hidden" type="text" name="action" size="20" value="deleteMovie">
 	    <input type="submit" value="Delete Movie" />
