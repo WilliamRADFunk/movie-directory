@@ -107,7 +107,6 @@ public class MovieRepository implements IMovieRepository {
 			java.sql.Connection connection = DriverManager.getConnection(url, username, password);
 			Statement statement = connection.createStatement();
 			
-			String dateModified = currentTime;
 			int numRowsAffected = statement.executeUpdate("UPDATE Movies SET Title='" + title + "', Synopsis='" + synopsis + "', `Optimal Season`=" + optimalSeason + ", `Worst Season`=" + worstSeason + ", `Cost License`=" + costLicense + ", `License Length`=" + licenseLength + ", `Produced By`='" + producedBy + "', `Date Modified`='" + currentTime + "' WHERE `ID`='" + id + "';");
 			
 			if(numRowsAffected > 0) {
