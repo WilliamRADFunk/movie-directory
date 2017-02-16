@@ -43,11 +43,19 @@ public class MovieRepository implements IMovieRepository {
 			int numRowsAffected = sqlStatement.executeUpdate();
 
 			Movie movie;
+			ResultSet rs;
 			if(numRowsAffected > 0) {
-				movie = new Movie(numRowsAffected, m.getTitle(), m.getSynopsis(), m.getExpectedPopularity(), m.getActualPopularity(), m.getOptimalSeason(), m.getWorstSeason(), m.getCostLicense(), m.getLicenseLength(), m.getProducedBy(), m.getDateModified(), m.getDateModified());
+				rs = sqlStatement.getGeneratedKeys();
+				rs.next();
+				movie = new Movie(rs.getInt(1), m.getTitle(), m.getSynopsis(), m.getExpectedPopularity(), m.getActualPopularity(), m.getOptimalSeason(), m.getWorstSeason(), m.getCostLicense(), m.getLicenseLength(), m.getProducedBy(), m.getDateModified(), m.getDateModified());
+				sqlConnection.close();
+				sqlStatement.close();
+				rs.close();
 				return movie;
 			}
 			else {
+				sqlConnection.close();
+				sqlStatement.close();
 				return null;
 			}
 		}
