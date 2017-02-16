@@ -8,7 +8,7 @@ public interface IMovieRepository {
 	/**
 	 * Create movie.
 	 */
-	public Movie createMovie(String title, String synopsis, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy);
+	public Movie createMovie(Movie m);
 	
 	/**
 	 * Delete movie.
@@ -18,7 +18,7 @@ public interface IMovieRepository {
 	/**
 	 * Edit movie.
 	 */
-	public Movie editMovie(int id, String title, String synopsis, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy);
+	public Movie editMovie(Movie m);
 	
 	/**
 	 * Get movie.

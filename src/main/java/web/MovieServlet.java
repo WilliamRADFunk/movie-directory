@@ -55,17 +55,33 @@ public class MovieServlet extends HttpServlet {
 	private void createMovie(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		MovieRepository movRepo = new MovieRepository();
 		
+		java.util.Date dt = new java.util.Date();
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String currentTime = sdf.format(dt);
+		
+		double expectedPopularity = ((double)((int)Math.ceil(Math.random() * 10))) / 10.0;
+		double actualPopularity = ((double)((int)Math.ceil(Math.random() * 10))) / 10.0;
+		
+		String title = request.getParameter("title");
+		String synopsis = request.getParameter("synopsis");
+		String optimalSeason = request.getParameter("optimalSeason");
+		String worstSeason = request.getParameter("worstSeason");
+		String costLicense = request.getParameter("costLicense");
+		String licenseLength = request.getParameter("licenseLength");
+		String producedBy = request.getParameter("producedBy");
+		
 		String msg = "";
 		boolean success = false;
-		if(		request.getParameter("title") != null &&
-				request.getParameter("synopsis") != null &&
-				request.getParameter("optimalSeason") != null &&
-				request.getParameter("worstSeason") != null &&
-				request.getParameter("costLicense") != null &&
-				request.getParameter("licenseLength") != null &&
-				request.getParameter("producedBy") != null)
+		if(		title != null &&
+				synopsis != null &&
+				optimalSeason != null &&
+				worstSeason != null &&
+				costLicense != null &&
+				licenseLength != null &&
+				producedBy != null)
 		{
-			Movie movie = movRepo.createMovie(request.getParameter("title"), request.getParameter("synopsis"), Integer.parseInt(request.getParameter("optimalSeason")), Integer.parseInt(request.getParameter("worstSeason")), Double.parseDouble(request.getParameter("costLicense")), Integer.parseInt(request.getParameter("licenseLength")), request.getParameter("producedBy"));
+			Movie mov = new Movie(0, title, synopsis, expectedPopularity, actualPopularity, Integer.parseInt(optimalSeason), Integer.parseInt(worstSeason), Double.parseDouble(costLicense), Integer.parseInt(licenseLength), producedBy, currentTime, currentTime);
+			Movie movie = movRepo.createMovie(mov);
 			if(movie != null) {
 
 	            request.setAttribute("id", movie.getId());
@@ -87,39 +103,39 @@ public class MovieServlet extends HttpServlet {
 	            request.getRequestDispatcher("/create.jsp?HasFailed=1").forward(request, response);
 	        }
 		}
-		else if(request.getParameter("title") == null || request.getParameter("title") == "")
+		else if(title == null)
 		{
 			msg = "Invalid title.";
 		}
-		else if(request.getParameter("synopsis") == null || request.getParameter("synopsis") == "")
+		else if(synopsis == null)
 		{
 			msg = "Invalid synopsis.";
 		}
-		else if(request.getParameter("optimalSeason") == null ||
-				Integer.parseInt(request.getParameter("optimalSeason")) < 0 ||
-				Integer.parseInt(request.getParameter("optimalSeason")) > 3)
+		else if(optimalSeason == null ||
+				Integer.parseInt(optimalSeason) < 0 ||
+				Integer.parseInt(optimalSeason) > 3)
 		{
 			msg = "Invalid Optimal Season.";
 		}
-		else if(request.getParameter("worstSeason") == null ||
-				Integer.parseInt(request.getParameter("worstSeason")) < 0 ||
-				Integer.parseInt(request.getParameter("worstSeason")) > 3)
+		else if(worstSeason == null ||
+				Integer.parseInt(worstSeason) < 0 ||
+				Integer.parseInt(worstSeason) > 3)
 		{
 			msg = "Invalid Worst Season.";
 		}
-		else if(request.getParameter("costLicense") == null ||
-				Integer.parseInt(request.getParameter("costLicense")) < 1000 ||
-				Integer.parseInt(request.getParameter("costLicense")) > 10000)
+		else if(costLicense == null ||
+				Integer.parseInt(costLicense) < 1000 ||
+				Integer.parseInt(costLicense) > 10000)
 		{
 			msg = "Invalid Cost of License.";
 		}
-		else if(request.getParameter("licenseLength") == null ||
-				Integer.parseInt(request.getParameter("licenseLength")) < 12 ||
-				Integer.parseInt(request.getParameter("licenseLength")) > 52)
+		else if(licenseLength == null ||
+				Integer.parseInt(licenseLength) < 12 ||
+				Integer.parseInt(licenseLength) > 52)
 		{
 			msg = "Invalid License Duration.";
 		}
-		else if(request.getParameter("producedBy") == null || request.getParameter("producedBy") == "")
+		else if(request.getParameter("producedBy") == null)
 		{
 			msg = "Invalid name.";
 		}
@@ -139,8 +155,10 @@ public class MovieServlet extends HttpServlet {
 	private void deleteMovie(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		MovieRepository movRepo = new MovieRepository();
 		
-		if(request.getParameter("id") != null && request.getParameter("id") != "") {
-			int id = Integer.parseInt(request.getParameter("id"));
+		String idStr = request.getParameter("id");
+		
+		if(idStr != null) {
+			int id = Integer.parseInt(idStr);
 			Movie movie = movRepo.deleteMovie(id);
 			
 	        if(movie != null) {
@@ -165,24 +183,38 @@ public class MovieServlet extends HttpServlet {
 	}
 	
 	/**
-	 * Create movie.
+	 * Edit movie.
 	 */
 	private void editMovie(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		MovieRepository movRepo = new MovieRepository();
 		
-		if(request.getParameter("id") != null && request.getParameter("id") != "") {
+		java.util.Date dt = new java.util.Date();
+		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String currentTime = sdf.format(dt);
+		
+		String id = request.getParameter("id");
+		String title = request.getParameter("title");
+		String synopsis = request.getParameter("synopsis");
+		String optimalSeason = request.getParameter("optimalSeason");
+		String worstSeason = request.getParameter("worstSeason");
+		String costLicense = request.getParameter("costLicense");
+		String licenseLength = request.getParameter("licenseLength");
+		String producedBy = request.getParameter("producedBy");
+		
+		if(request.getParameter("id") != null) {
 			String msg = "";
 			boolean success = false;
-			if(		request.getParameter("id") != null &&
-					request.getParameter("title") != null &&
-					request.getParameter("synopsis") != null &&
-					request.getParameter("optimalSeason") != null &&
-					request.getParameter("worstSeason") != null &&
-					request.getParameter("costLicense") != null &&
-					request.getParameter("licenseLength") != null &&
-					request.getParameter("producedBy") != null)
+			if(		id != null &&
+					title != null &&
+					synopsis != null &&
+					optimalSeason != null &&
+					worstSeason != null &&
+					costLicense != null &&
+					licenseLength != null &&
+					producedBy != null)
 			{
-				Movie movie = movRepo.editMovie(Integer.parseInt(request.getParameter("id")), request.getParameter("title"), request.getParameter("synopsis"), Integer.parseInt(request.getParameter("optimalSeason")), Integer.parseInt(request.getParameter("worstSeason")), Double.parseDouble(request.getParameter("costLicense")), Integer.parseInt(request.getParameter("licenseLength")), request.getParameter("producedBy"));
+				Movie mov = new Movie(Integer.parseInt(id), title, synopsis, 0.0, 0.0, Integer.parseInt(optimalSeason), Integer.parseInt(worstSeason), Double.parseDouble(costLicense), Integer.parseInt(licenseLength), producedBy, currentTime, currentTime);
+				Movie movie = movRepo.editMovie(mov);
 				if(movie != null) {
 	
 		            request.setAttribute("id", movie.getId());
@@ -204,43 +236,31 @@ public class MovieServlet extends HttpServlet {
 		            request.getRequestDispatcher("/edit.jsp?HasFailed=1").forward(request, response);
 		        }
 			}
-			else if(request.getParameter("id") == null || request.getParameter("id") == "")
-			{
+			else if(id == null) {
 				msg = "Invalid id.";
 			}
-			else if(request.getParameter("title") == null || request.getParameter("title") == "")
-			{
+			else if(title == null) {
 				msg = "Invalid title.";
 			}
-			else if(request.getParameter("synopsis") == null || request.getParameter("synopsis") == "")
-			{
+			else if(synopsis == null) {
 				msg = "Invalid synopsis.";
 			}
-			else if(request.getParameter("optimalSeason") == null ||
-					Integer.parseInt(request.getParameter("optimalSeason")) < 0 ||
-					Integer.parseInt(request.getParameter("optimalSeason")) > 3)
-			{
+			else if(optimalSeason == null || Integer.parseInt(optimalSeason) < 0 ||	Integer.parseInt(optimalSeason) > 3) {
 				msg = "Invalid Optimal Season.";
 			}
-			else if(request.getParameter("worstSeason") == null ||
-					Integer.parseInt(request.getParameter("worstSeason")) < 0 ||
-					Integer.parseInt(request.getParameter("worstSeason")) > 3)
+			else if(worstSeason == null || Integer.parseInt(worstSeason) < 0 ||	Integer.parseInt(worstSeason) > 3)
 			{
 				msg = "Invalid Worst Season.";
 			}
-			else if(request.getParameter("costLicense") == null ||
-					Integer.parseInt(request.getParameter("costLicense")) < 1000 ||
-					Integer.parseInt(request.getParameter("costLicense")) > 10000)
+			else if(costLicense == null || Integer.parseInt(costLicense) < 1000 || Integer.parseInt(costLicense) > 10000)
 			{
 				msg = "Invalid Cost of License.";
 			}
-			else if(request.getParameter("licenseLength") == null ||
-					Integer.parseInt(request.getParameter("licenseLength")) < 12 ||
-					Integer.parseInt(request.getParameter("licenseLength")) > 52)
+			else if(licenseLength == null || Integer.parseInt(licenseLength) < 12 || Integer.parseInt(licenseLength) > 52)
 			{
 				msg = "Invalid License Duration.";
 			}
-			else if(request.getParameter("producedBy") == null || request.getParameter("producedBy") == "")
+			else if(producedBy == null)
 			{
 				msg = "Invalid name.";
 			}
@@ -261,7 +281,7 @@ public class MovieServlet extends HttpServlet {
 	protected void getMovie(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		MovieRepository movRepo = new MovieRepository();
 				
-		if(request.getParameter("id") != null && request.getParameter("id") != "") {
+		if(request.getParameter("id") != null) {
 			int id = Integer.parseInt(request.getParameter("id"));
 			Movie movie = movRepo.getMovie(id);
 			

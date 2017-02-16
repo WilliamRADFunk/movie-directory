@@ -21,6 +21,7 @@ public class Movie
 		this.title = title;
 		this.synopsis = synopsis;
 		this.expectedPopularity = expectedPopularity;
+		this.actualPopularity = actualPopularity;
 		this.optimalSeason = optimalSeason;
 		this.worstSeason = worstSeason;
 		this.costLicense = costLicense;

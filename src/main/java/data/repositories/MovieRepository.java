@@ -1,6 +1,8 @@
 package data.repositories;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,24 +21,30 @@ public class MovieRepository implements IMovieRepository {
 		
 	}
 	
-	public Movie createMovie(String title, String synopsis, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy) {
+	public Movie createMovie(Movie m) {
+		Connection sqlConnection = null;
+		PreparedStatement sqlStatement = null;
 		try {
-			java.util.Date dt = new java.util.Date();
-			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String currentTime = sdf.format(dt);
-			
-			double expectedPopularity = 0.5;
-			double actualPopularity = 0.5;
-			
 			Class.forName("com.mysql.jdbc.Driver");
-			java.sql.Connection connection = DriverManager.getConnection(url, username, password);
-			Statement statement = connection.createStatement();
+			sqlConnection = DriverManager.getConnection(url, username, password);
 			
-			int numRowsAffected = statement.executeUpdate("INSERT INTO Movies (Title, Synopsis, `Expected Popularity`, `Actual Popularity`, `Optimal Season`, `Worst Season`, `Cost License`, `License Length`, `Produced By`, `Date Created`, `Date Modified`) VALUES ('" + title + "', '" + synopsis + "', " + expectedPopularity + ", " + actualPopularity + ", " + optimalSeason + ", " + worstSeason + ", " + costLicense + ", " + licenseLength + ", '" + producedBy + "', '" + currentTime + "', '" + currentTime + "');", Statement.RETURN_GENERATED_KEYS);
+			sqlStatement = sqlConnection.prepareStatement("INSERT INTO Movies (Title, Synopsis, `Expected Popularity`, `Actual Popularity`, `Optimal Season`, `Worst Season`, `Cost License`, `License Length`, `Produced By`, `Date Created`, `Date Modified`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+			sqlStatement.setString(1, m.getTitle().toString());
+            sqlStatement.setString(2, m.getSynopsis().toString());
+            sqlStatement.setDouble(3, m.getExpectedPopularity());
+            sqlStatement.setDouble(4, m.getActualPopularity());
+            sqlStatement.setInt(5, m.getOptimalSeason());
+            sqlStatement.setInt(6, m.getWorstSeason());
+            sqlStatement.setDouble(7, m.getCostLicense());
+            sqlStatement.setInt(8, m.getLicenseLength());
+            sqlStatement.setString(9, m.getProducedBy().toString());
+            sqlStatement.setString(10, m.getDateCreated().toString());
+            sqlStatement.setString(11, m.getDateModified().toString());
+			int numRowsAffected = sqlStatement.executeUpdate();
 
 			Movie movie;
 			if(numRowsAffected > 0) {
-				movie = new Movie(numRowsAffected, title, synopsis, expectedPopularity, actualPopularity, optimalSeason, worstSeason, costLicense, licenseLength, producedBy, currentTime, currentTime);
+				movie = new Movie(numRowsAffected, m.getTitle(), m.getSynopsis(), m.getExpectedPopularity(), m.getActualPopularity(), m.getOptimalSeason(), m.getWorstSeason(), m.getCostLicense(), m.getLicenseLength(), m.getProducedBy(), m.getDateModified(), m.getDateModified());
 				return movie;
 			}
 			else {
@@ -44,7 +52,6 @@ public class MovieRepository implements IMovieRepository {
 			}
 		}
 		catch (SQLException | ClassNotFoundException e) {
-			String err = e.toString();
 			return null;
 		}
 	}
@@ -53,13 +60,16 @@ public class MovieRepository implements IMovieRepository {
 	 * Delete movie.
 	 */
 	public Movie deleteMovie(int id) {
+		Connection sqlConnection = null;
+		PreparedStatement sqlStatement = null;
 		try {			
 			Class.forName("com.mysql.jdbc.Driver");
-			java.sql.Connection connection = DriverManager.getConnection(url, username, password);
-			Statement statement = connection.createStatement();
+			sqlConnection = DriverManager.getConnection(url, username, password);
 			
 			ResultSet myResult;
-			myResult = statement.executeQuery("SELECT * FROM Movies WHERE `ID`='" + id + "';");
+			sqlStatement = sqlConnection.prepareStatement("SELECT * FROM Movies WHERE `ID`=?;");
+			sqlStatement.setInt(1, id);
+			myResult = sqlStatement.executeQuery();
 			
 			if(myResult.next()) {
 				Movie movie = new Movie(	myResult.getInt("ID"),
@@ -75,7 +85,9 @@ public class MovieRepository implements IMovieRepository {
 											myResult.getString("Date Created"),
 											myResult.getString("Date Modified")
 										);
-				int numRowsAffected = statement.executeUpdate("DELETE FROM Movies WHERE `ID`='" + id + "';");
+				sqlStatement = sqlConnection.prepareStatement("DELETE FROM Movies WHERE `ID`=?;");
+				sqlStatement.setInt(1, id);
+				int numRowsAffected = sqlStatement.executeUpdate();
 
 				if(numRowsAffected > 0) {
 					return movie;
@@ -89,7 +101,6 @@ public class MovieRepository implements IMovieRepository {
 			}
 		}
 		catch (SQLException | ClassNotFoundException e) {
-			String err = e.toString();
 			return null;
 		}
 	}
@@ -97,21 +108,30 @@ public class MovieRepository implements IMovieRepository {
 	/**
 	 * Edit movie.
 	 */
-	public Movie editMovie(int id, String title, String synopsis, int optimalSeason, int worstSeason, double costLicense, int licenseLength, String producedBy) {
-		try {
-			java.util.Date dt = new java.util.Date();
-			java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String currentTime = sdf.format(dt);
-			
+	public Movie editMovie(Movie m) {
+		Connection sqlConnection = null;
+		PreparedStatement sqlStatement = null;
+		try {			
 			Class.forName("com.mysql.jdbc.Driver");
-			java.sql.Connection connection = DriverManager.getConnection(url, username, password);
-			Statement statement = connection.createStatement();
+			sqlConnection = DriverManager.getConnection(url, username, password);
+			sqlStatement = sqlConnection.prepareStatement("UPDATE Movies SET Title=?, Synopsis=?, `Optimal Season`=?, `Worst Season`=?, `Cost License`=?, `License Length`=?, `Produced By`=?, `Date Modified`=? WHERE `ID`=?;");
+			sqlStatement.setString(1, m.getTitle().toString());
+            sqlStatement.setString(2, m.getSynopsis().toString());
+            sqlStatement.setInt(3, m.getOptimalSeason());
+            sqlStatement.setInt(4, m.getWorstSeason());
+            sqlStatement.setDouble(5, m.getCostLicense());
+            sqlStatement.setInt(6, m.getLicenseLength());
+            sqlStatement.setString(7, m.getProducedBy().toString());
+            sqlStatement.setString(8, m.getDateModified().toString());
+            sqlStatement.setInt(9, m.getId());
 			
-			int numRowsAffected = statement.executeUpdate("UPDATE Movies SET Title='" + title + "', Synopsis='" + synopsis + "', `Optimal Season`=" + optimalSeason + ", `Worst Season`=" + worstSeason + ", `Cost License`=" + costLicense + ", `License Length`=" + licenseLength + ", `Produced By`='" + producedBy + "', `Date Modified`='" + currentTime + "' WHERE `ID`='" + id + "';");
+			int numRowsAffected = sqlStatement.executeUpdate();
 			
 			if(numRowsAffected > 0) {
 				ResultSet myResult;
-				myResult = statement.executeQuery("SELECT * FROM Movies WHERE `ID`='" + id + "';");
+				sqlStatement = sqlConnection.prepareStatement("SELECT * FROM Movies WHERE `ID`=?;");
+				sqlStatement.setInt(1, m.getId());
+				myResult = sqlStatement.executeQuery();
 
 				if(myResult.next()) {
 					Movie movie = new Movie(	myResult.getInt("ID"),
@@ -138,7 +158,6 @@ public class MovieRepository implements IMovieRepository {
 			}
 		}
 		catch (SQLException | ClassNotFoundException e) {
-			String err = e.toString();
 			return null;
 		}
 	}
@@ -147,15 +166,16 @@ public class MovieRepository implements IMovieRepository {
 	 * Get movie.
 	 */
 	public Movie getMovie(int id) {
+		Connection sqlConnection = null;
+		PreparedStatement sqlStatement = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			
-			java.sql.Connection connection = DriverManager.getConnection(url, username, password);
-			
-			Statement statement = connection.createStatement();
+			sqlConnection = DriverManager.getConnection(url, username, password);
 			
 			ResultSet myResult;
-			myResult = statement.executeQuery("SELECT * FROM Movies WHERE `ID`='" + id + "';");
+			sqlStatement = sqlConnection.prepareStatement("SELECT * FROM Movies WHERE `ID`=?;");
+			sqlStatement.setInt(1, id);
+			myResult = sqlStatement.executeQuery();
 			
 			Movie movie;
 			if(myResult.next()) {
@@ -179,7 +199,6 @@ public class MovieRepository implements IMovieRepository {
 			}
 		}
 		catch (SQLException | ClassNotFoundException e) {
-			String err = e.toString();
 			return null;
 		}
 	}
@@ -188,15 +207,15 @@ public class MovieRepository implements IMovieRepository {
 	 * Get all movies.
 	 */
 	public List<Movie> getMovies() {
+		Connection sqlConnection = null;
+		PreparedStatement sqlStatement = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			
-			java.sql.Connection connection = DriverManager.getConnection(url, username, password);
-			
-			Statement statement = connection.createStatement();
+			sqlConnection = DriverManager.getConnection(url, username, password);
 			
 			ResultSet myResult;
-			myResult = statement.executeQuery("SELECT * FROM Movies;");
+			sqlStatement = sqlConnection.prepareStatement("SELECT * FROM Movies;");
+			myResult = sqlStatement.executeQuery();
 			
 			List<Movie> movies = new ArrayList<Movie>();
 			while(myResult.next()) {
@@ -218,7 +237,6 @@ public class MovieRepository implements IMovieRepository {
 			return movies;
 		}
 		catch (SQLException | ClassNotFoundException e) {
-			String err = e.toString();
 			return null;
 		}
 	}
